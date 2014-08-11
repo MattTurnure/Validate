@@ -36,6 +36,37 @@ var Validate = {
         checkbox: 'Must agree to register'
     },
 
+    init: function (id) {
+        'use strict';
+
+        var field_ary = Validate.getRequiredFieldArray(id),
+            form      = document.getElementById(id),
+            len = field_ary.length,
+            i = 0;
+
+        for (i = 0; i < len; i++) {
+            Validate.setSingleValidationTimer(field_ary[i]);
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            Validate.checkFields(field_ary, function (result) {
+                if (result === true) {
+                    form.submit();
+                }
+            });
+        }, false);
+    },
+
+    setSingleValidationTimer: function (input_obj) {
+        'use strict';
+
+        input_obj.addEventListener('blur', function () {
+            Validate.checkThisField(input_obj);
+        }, false);
+    },
+
     getValidationMessage: function (error_type) {
         'use strict';
 
