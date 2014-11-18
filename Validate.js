@@ -1,6 +1,6 @@
-var Validate = {
+var validate = {
     success_icon_classname: 'icon-ok',
-    error_icon_classname: 'icon-remove',
+    error_icon_classname: 'icon-error',
 
     rules: {
         required: /\S/,
@@ -39,19 +39,19 @@ var Validate = {
     init: function (id) {
         'use strict';
 
-        var field_ary = Validate.getRequiredFieldArray(id),
+        var field_ary = validate.getRequiredFieldArray(id),
             form      = document.getElementById(id),
-            len = field_ary.length,
-            i = 0;
+            len       = field_ary.length,
+            i         = 0;
 
         for (i = 0; i < len; i++) {
-            Validate.setSingleValidationTimer(field_ary[i]);
+            validate.setSingleValidationTimer(field_ary[i]);
         }
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            Validate.checkFields(field_ary, function (result) {
+            validate.checkFields(field_ary, function (result) {
                 if (result === true) {
                     form.submit();
                 }
@@ -63,7 +63,7 @@ var Validate = {
         'use strict';
 
         input_obj.addEventListener('blur', function () {
-            Validate.checkThisField(input_obj);
+            validate.checkThisField(input_obj);
         }, false);
     },
 
@@ -74,25 +74,25 @@ var Validate = {
 
         switch (error_type) {
             case 'required':
-                message = Validate.errors.required;
+                message = validate.errors.required;
                 break;
             case 'email':
-                message = Validate.errors.email;
+                message = validate.errors.email;
                 break;
             case 'telephone':
-                message = Validate.errors.telephone;
+                message = validate.errors.telephone;
                 break;
             case 'zip':
-                message = Validate.errors.zip;
+                message = validate.errors.zip;
                 break;
             case 'dropdown':
-                message = Validate.errors.dropdown;
+                message = validate.errors.dropdown;
                 break;
             case 'checkbox':
-                message = Validate.errors.checkbox;
+                message = validate.errors.checkbox;
                 break;
             default:
-                message = Validate.errors.required;
+                message = validate.errors.required;
         }
 
         return message;
@@ -105,25 +105,25 @@ var Validate = {
 
         switch (error_type) {
             case 'required':
-                regex = Validate.rules.required;
+                regex = validate.rules.required;
                 break;
             case 'email':
-                regex = Validate.rules.email;
+                regex = validate.rules.email;
                 break;
             case 'telephone':
-                regex = Validate.rules.telephone;
+                regex = validate.rules.telephone;
                 break;
             case 'zip':
-                regex = Validate.rules.zip;
+                regex = validate.rules.zip;
                 break;
             case 'dropdown':
-                regex = Validate.rules.dropdown;
+                regex = validate.rules.dropdown;
                 break;
             case 'checkbox':
-                regex = Validate.rules.checkbox;
+                regex = validate.rules.checkbox;
                 break;
             default:
-                regex = Validate.rules.required;
+                regex = validate.rules.required;
         }
 
         return regex;
@@ -151,39 +151,39 @@ var Validate = {
 
         var input_type    = input_obj.type.toLowerCase(),
             error_type    = input_obj.getAttribute('data-validate'),
-            error_message = Validate.getValidationMessage(error_type),
-            regex         = Validate.getValidationRegex(error_type),
+            error_message = validate.getValidationMessage(error_type),
+            regex         = validate.getValidationRegex(error_type),
             input_val;
 
         if (input_type === 'select-one') {
             input_val = input_obj.options[input_obj.selectedIndex].value;
 
-            if (Validate.rules.dropdown(input_val) === false) {
-                Validate.addErrorClasses(input_obj);
-                Validate.setErrorMessage(input_obj, error_message);
+            if (validate.rules.dropdown(input_val) === false) {
+                validate.addErrorClasses(input_obj);
+                validate.setErrorMessage(input_obj, error_message);
             } else {
-                Validate.addSuccessClasses(input_obj);
+                validate.addSuccessClasses(input_obj);
             }
         } else if (input_type === 'checkbox') {
             input_val = input_obj.checked;
 
-            if (Validate.rules.checkbox(input_val) === false) {
-                Validate.addErrorClasses(input_obj);
-                Validate.setErrorMessage(input_obj, error_message);
+            if (validate.rules.checkbox(input_val) === false) {
+                validate.addErrorClasses(input_obj);
+                validate.setErrorMessage(input_obj, error_message);
             } else {
-                Validate.addSuccessClasses(input_obj);
+                validate.addSuccessClasses(input_obj);
             }
         } else {
             input_val = input_obj.value;
 
             if (regex.test(input_val) === false) {
-                Validate.removeSuccessIcon(input_obj);
-                Validate.addErrorIcon(input_obj);
-                Validate.addErrorClasses(input_obj);
-                Validate.setErrorMessage(input_obj, error_message);
+                validate.removeSuccessIcon(input_obj);
+                validate.addErrorIcon(input_obj);
+                validate.addErrorClasses(input_obj);
+                validate.setErrorMessage(input_obj, error_message);
             } else {
-                Validate.addSuccessClasses(input_obj);
-                Validate.addSuccessIcon(input_obj);
+                validate.addSuccessClasses(input_obj);
+                validate.addSuccessIcon(input_obj);
             }
         }
     },
@@ -208,45 +208,45 @@ var Validate = {
             input_obj     = field_ary[i];
             input_type    = input_obj.type.toLowerCase();
             error_type    = input_obj.getAttribute('data-validate');
-            error_message = Validate.getValidationMessage(error_type);
-            regex         = Validate.getValidationRegex(error_type);
+            error_message = validate.getValidationMessage(error_type);
+            regex         = validate.getValidationRegex(error_type);
 
             if (input_type === 'select-one') {
                 input_val = input_obj.options[input_obj.selectedIndex].value;
 
-                if (Validate.rules.dropdown(input_val) === false) {
-                    Validate.addErrorClasses(input_obj);
-                    Validate.setErrorMessage(input_obj, error_message);
+                if (validate.rules.dropdown(input_val) === false) {
+                    validate.addErrorClasses(input_obj);
+                    validate.setErrorMessage(input_obj, error_message);
 
                     input_obj.focus();
 
                     callback(false);
                     return;
                 } else {
-                    Validate.addSuccessClasses(input_obj);
+                    validate.addSuccessClasses(input_obj);
                 }
             } else if (input_type === 'checkbox') {
                 input_val = input_obj.checked;
 
-                if (Validate.rules.checkbox(input_val) === false) {
-                    Validate.addErrorClasses(input_obj);
-                    Validate.setErrorMessage(input_obj, error_message);
+                if (validate.rules.checkbox(input_val) === false) {
+                    validate.addErrorClasses(input_obj);
+                    validate.setErrorMessage(input_obj, error_message);
 
                     input_obj.focus();
                     callback(false);
                     return;
                 } else {
-                    Validate.addSuccessClasses(input_obj);
+                    validate.addSuccessClasses(input_obj);
                 }
             } else {
                 input_val = input_obj.value;
 
                 if (regex.test(input_val) === false) {
-                    Validate.removeSuccessIcon(input_obj);
-                    Validate.addErrorIcon(input_obj);
-                    Validate.addErrorClasses(input_obj);
+                    validate.removeSuccessIcon(input_obj);
+                    validate.addErrorIcon(input_obj);
+                    validate.addErrorClasses(input_obj);
                     //input_obj.value = error_message;
-                    Validate.setErrorMessage(input_obj, error_message);
+                    validate.setErrorMessage(input_obj, error_message);
 
                     input_obj.focus();
                     input_obj.select();
@@ -254,8 +254,8 @@ var Validate = {
                     callback(false);
                     return;
                 } else {
-                    Validate.addSuccessClasses(input_obj);
-                    Validate.addSuccessIcon(input_obj);
+                    validate.addSuccessClasses(input_obj);
+                    validate.addSuccessIcon(input_obj);
                 }
             }
         }
@@ -285,23 +285,23 @@ var Validate = {
         switch (field_type) {
             case 'select-one':
                 input_obj.addEventListener('change', function () {
-                    Validate.removeErrorMessage(id);
-                    Validate.removeErrorClasses(input_obj);
-                    Validate.removeErrorIcon(input_obj);
+                    validate.removeErrorMessage(id);
+                    validate.removeErrorClasses(input_obj);
+                    validate.removeErrorIcon(input_obj);
                 }, false);
                 break;
             case 'checkbox':
                 input_obj.addEventListener('click', function () {
-                    Validate.removeErrorMessage(id);
-                    Validate.removeErrorClasses(input_obj);
-                    Validate.removeErrorIcon(input_obj);
+                    validate.removeErrorMessage(id);
+                    validate.removeErrorClasses(input_obj);
+                    validate.removeErrorIcon(input_obj);
                 }, false);
                 break;
             default:
                 input_obj.addEventListener('keydown', function () {
-                    Validate.removeErrorMessage(id);
-                    Validate.removeErrorClasses(input_obj);
-                    Validate.removeErrorIcon(input_obj);
+                    validate.removeErrorMessage(id);
+                    validate.removeErrorClasses(input_obj);
+                    validate.removeErrorIcon(input_obj);
                 }, false);
                 break;
         }
@@ -344,12 +344,12 @@ var Validate = {
             icon_success_id = input_obj.id + '-success',
             icon_success;
 
-        Validate.removeErrorIcon(input_obj);
+        validate.removeErrorIcon(input_obj);
 
         if (!doc.getElementById(icon_success_id)) {
             icon_success = doc.createElement('i');
             icon_success.setAttribute('id', icon_success_id);
-            icon_success.className = Validate.success_icon_classname;
+            icon_success.className = validate.success_icon_classname;
             input_obj.parentNode.appendChild(icon_success);
         }
     },
@@ -377,7 +377,7 @@ var Validate = {
         if (!doc.getElementById(icon_error_id)) {
             icon_error = doc.createElement('i');
             icon_error.setAttribute('id', icon_error_id);
-            icon_error.className = Validate.error_icon_classname;
+            icon_error.className = validate.error_icon_classname;
             input_obj.parentNode.appendChild(icon_error);
         }
     },
