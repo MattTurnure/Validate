@@ -16,7 +16,7 @@ Also add a unique ID to your form (i.e. _form-contact_)
 #### JavaScript ####
 In your JavaScript, inititialize with:
 
-Validate.initFormValidation('form-contact');
+validate.init('form-contact');
 
 'form-contact' would be the id on your form.
 
